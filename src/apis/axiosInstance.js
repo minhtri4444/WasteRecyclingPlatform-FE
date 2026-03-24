@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const apiBaseUrl = (import.meta.env.VITE_API_URL || "http://localhost:5232/api").replace(/\/$/, "");
+
 // 1. Khởi tạo instance
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, 
+  baseURL: apiBaseUrl,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
@@ -35,7 +37,6 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("user");
-      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }
