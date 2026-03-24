@@ -105,9 +105,10 @@ export default function Login() {
     try {
       const response = await authService.login(formData);
       localStorage.setItem("user", JSON.stringify(response));
-      if (response.role === "Admin") navigate("/admin/dashboard");
-      else if (response.role === "Enterprise") navigate("/enterprise/pending");
-      else if (response.role === "Collector") navigate("/collector/tasks");
+      const role = String(response?.role || "").toLowerCase();
+      if (role === "admin" || role === "administrator") navigate("/admin/dashboard");
+      else if (role === "enterprise") navigate("/enterprise/pending");
+      else if (role === "collector") navigate("/collector/tasks");
       else navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Sai email hoặc mật khẩu. Vui lòng thử lại!");
