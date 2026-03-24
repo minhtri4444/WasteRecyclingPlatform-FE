@@ -9,8 +9,14 @@ import AdminUsers from "../pages/Admin/AdminUsers";
 import AdminAreas from "../pages/Admin/AdminAreas";
 import AdminWasteTypes from "../pages/Admin/AdminWasteTypes";
 import AdminFeedback from "../pages/Admin/AdminFeedback";
+import EnterpriseDashboard from "../pages/Enterprise/EnterpriseDashboard";
+import EnterpriseCapacities from "../pages/Enterprise/EnterpriseCapacities";
+import EnterprisePending from "../pages/Enterprise/EnterprisePending";
+import EnterpriseAssignments from "../pages/Enterprise/EnterpriseAssignments";
+import EnterpriseCollectors from "../pages/Enterprise/EnterpriseCollectors";
+import EnterpriseRules from "../pages/Enterprise/EnterpriseRules";
 
-function RequireAdmin({ children }) {
+function RequireRole({ children, allowedRoles = [] }) {
   let user = null;
   try {
     user = JSON.parse(localStorage.getItem("user") || "null");
@@ -21,7 +27,9 @@ function RequireAdmin({ children }) {
   if (!user) return <Navigate to="/login" replace />;
 
   const role = String(user.role || "").toLowerCase();
-  if (role !== "admin" && role !== "administrator") {
+  const normalizedAllowed = allowedRoles.map((r) => String(r).toLowerCase());
+
+  if (!normalizedAllowed.includes(role)) {
     return <Navigate to="/" replace />;
   }
 
@@ -40,41 +48,41 @@ export default function AppRoutes() {
         <Route
           path="/admin/dashboard"
           element={
-            <RequireAdmin>
+            <RequireRole allowedRoles={["admin", "administrator"]}>
               <AdminDashboard />
-            </RequireAdmin>
+            </RequireRole>
           }
         />
         <Route
           path="/admin/users"
           element={
-            <RequireAdmin>
+            <RequireRole allowedRoles={["admin", "administrator"]}>
               <AdminUsers />
-            </RequireAdmin>
+            </RequireRole>
           }
         />
         <Route
           path="/admin/areas"
           element={
-            <RequireAdmin>
+            <RequireRole allowedRoles={["admin", "administrator"]}>
               <AdminAreas />
-            </RequireAdmin>
+            </RequireRole>
           }
         />
         <Route
           path="/admin/waste-types"
           element={
-            <RequireAdmin>
+            <RequireRole allowedRoles={["admin", "administrator"]}>
               <AdminWasteTypes />
-            </RequireAdmin>
+            </RequireRole>
           }
         />
         <Route
           path="/admin/feedback"
           element={
-            <RequireAdmin>
+            <RequireRole allowedRoles={["admin", "administrator"]}>
               <AdminFeedback />
-            </RequireAdmin>
+            </RequireRole>
           }
         />
         <Route
@@ -88,9 +96,49 @@ export default function AppRoutes() {
         <Route
           path="/enterprise/pending"
           element={
-            <div className="p-8 bg-white rounded-[32px] shadow-sm font-bold">
-              Enterprise Pending Items
-            </div>
+            <RequireRole allowedRoles={["enterprise"]}>
+              <EnterprisePending />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/enterprise/dashboard"
+          element={
+            <RequireRole allowedRoles={["enterprise"]}>
+              <EnterpriseDashboard />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/enterprise/capacities"
+          element={
+            <RequireRole allowedRoles={["enterprise"]}>
+              <EnterpriseCapacities />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/enterprise/assignments"
+          element={
+            <RequireRole allowedRoles={["enterprise"]}>
+              <EnterpriseAssignments />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/enterprise/collectors"
+          element={
+            <RequireRole allowedRoles={["enterprise"]}>
+              <EnterpriseCollectors />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/enterprise/rules"
+          element={
+            <RequireRole allowedRoles={["enterprise"]}>
+              <EnterpriseRules />
+            </RequireRole>
           }
         />
         <Route
