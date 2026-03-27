@@ -8,9 +8,12 @@ const INITIAL_FORM = {
   collectorId: "",
 };
 
+
 export default function EnterpriseAssignments() {
   const [assignments, setAssignments] = useState([]);
+  const [pendingReports, setPendingReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingPending, setLoadingPending] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState(INITIAL_FORM);
@@ -18,7 +21,6 @@ export default function EnterpriseAssignments() {
   const fetchAssignments = async () => {
     setLoading(true);
     setError("");
-
     try {
       const data = await enterpriseService.getAssignments();
       setAssignments(toArray(data));
@@ -29,8 +31,21 @@ export default function EnterpriseAssignments() {
     }
   };
 
+  const fetchPendingReports = async () => {
+    setLoadingPending(true);
+    try {
+      const data = await enterpriseService.getPendingReports();
+      setPendingReports(toArray(data));
+    } catch (err) {
+      // Không cần setError chung, chỉ log
+    } finally {
+      setLoadingPending(false);
+    }
+  };
+
   useEffect(() => {
     fetchAssignments();
+    fetchPendingReports();
   }, []);
 
   const handleCreate = async (e) => {
@@ -58,19 +73,59 @@ export default function EnterpriseAssignments() {
     }
   };
 
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">Dieu phoi Collector</h1>
-          <p className="text-white/35 text-sm mt-1">Tao va theo doi assignment giua report va collector</p>
+          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">Điều phối Collector</h1>
+          <p className="text-white/35 text-sm mt-1">Tạo và theo dõi assignment giữa report và collector</p>
         </div>
         <button
-          onClick={fetchAssignments}
+          onClick={() => { fetchAssignments(); fetchPendingReports(); }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-emerald-500/25 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/15 text-sm font-bold"
         >
-          <RefreshCw size={14} /> Lam moi
+          <RefreshCw size={14} /> Làm mới
         </button>
+      </div>
+
+      {/* Bảng rác chờ duyệt */}
+      <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 overflow-hidden">
+        <div className="px-4 py-3 font-bold text-yellow-400 text-base">Rác chờ duyệt (Pending Reports)</div>
+        {loadingPending ? (
+          <div className="py-8 flex items-center justify-center text-yellow-400/60 text-sm">
+            <Loader2 size={16} className="animate-spin mr-2" /> Đang tải pending reports
+          </div>
+        ) : pendingReports.length === 0 ? (
+          <p className="px-4 py-6 text-yellow-400/50 text-sm">Không có rác chờ duyệt</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-sm">
+              <thead className="text-yellow-700 bg-yellow-100/10">
+                <tr>
+                  <th className="text-left px-4 py-3 font-bold">Report ID</th>
+                  <th className="text-left px-4 py-3 font-bold">Người báo cáo</th>
+                  <th className="text-left px-4 py-3 font-bold">Loại rác</th>
+                  <th className="text-left px-4 py-3 font-bold">Mô tả</th>
+                  <th className="text-left px-4 py-3 font-bold">Ngày tạo</th>
+                  <th className="text-left px-4 py-3 font-bold">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingReports.map((item) => (
+                  <tr key={rowId(item, ["reportId"])} className="border-t border-yellow-400/10 text-yellow-900">
+                    <td className="px-4 py-3">{pick(item, ["reportId", "id"], "-")}</td>
+                    <td className="px-4 py-3">{pick(item, ["citizenName"], "-")}</td>
+                    <td className="px-4 py-3">{pick(item, ["wasteTypeName"], "-")}</td>
+                    <td className="px-4 py-3">{pick(item, ["description"], "-")}</td>
+                    <td className="px-4 py-3">{formatDate(pick(item, ["createdAt"], null))}</td>
+                    <td className="px-4 py-3">{pick(item, ["status"], "-")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <form

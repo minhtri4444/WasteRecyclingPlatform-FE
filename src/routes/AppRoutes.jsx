@@ -15,6 +15,12 @@ import EnterprisePending from "../pages/Enterprise/EnterprisePending";
 import EnterpriseAssignments from "../pages/Enterprise/EnterpriseAssignments";
 import EnterpriseCollectors from "../pages/Enterprise/EnterpriseCollectors";
 import EnterpriseRules from "../pages/Enterprise/EnterpriseRules";
+import CitizenDashboard from "../pages/Citizen/CitizenDashboard";
+import CitizenReports from "../pages/Citizen/CitizenReports";
+import CitizenLeaderboard from "../pages/Citizen/CitizenLeaderboard";
+import CitizenRewards from "../pages/Citizen/CitizenRewards";
+import CitizenSupport from "../pages/Citizen/CitizenSupport";
+import CitizenGuide from "../pages/Citizen/CitizenGuide";
 
 function RequireRole({ children, allowedRoles = [] }) {
   let user = null;
@@ -86,13 +92,29 @@ export default function AppRoutes() {
           }
         />
         <Route
-          path="/citizen/report"
-          element={
-            <div className="p-8 bg-white rounded-[32px] shadow-sm font-bold">
-              Citizen Report Page
-            </div>
-          }
-        />
+            path="/citizen/report"
+            element={<CitizenReports />}
+          />
+          <Route
+            path="/citizen/dashboard"
+            element={<CitizenDashboard />}
+          />
+          <Route
+            path="/citizen/leaderboard"
+            element={<CitizenLeaderboard />}
+          />
+          <Route
+            path="/citizen/rewards"
+            element={<CitizenRewards />}
+          />
+          <Route
+            path="/citizen/support"
+            element={<CitizenSupport />}
+          />
+          <Route
+            path="/citizen/guide"
+            element={<CitizenGuide />}
+          />
         <Route
           path="/enterprise/pending"
           element={

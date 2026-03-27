@@ -12,9 +12,9 @@ const menuGroups = {
     { groupLabel: "Hỗ trợ", items: ["Phản hồi & Khiếu nại"] },
   ],
   Citizen: [
-    { groupLabel: "Hoạt động", items: ["Báo cáo rác", "Lịch sử báo cáo"] },
+    { groupLabel: "Hoạt động", items: ["Tổng quan", "Báo cáo của tôi"] },
     { groupLabel: "Cộng đồng", items: ["Bảng xếp hạng", "Phần thưởng"] },
-    { groupLabel: "Hỗ trợ", items: ["Gửi khiếu nại"] },
+    { groupLabel: "Hỗ trợ", items: ["Phản hồi của tôi"] },
   ],
   Enterprise: [
     { groupLabel: "Tổng quan", items: ["Tổng quan"] },
