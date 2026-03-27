@@ -13,7 +13,7 @@ const menuGroups = {
   ],
   Citizen: [
     { groupLabel: "Hoạt động", items: ["Tổng quan", "Báo cáo của tôi"] },
-    { groupLabel: "Cộng đồng", items: ["Bảng xếp hạng", "Phần thưởng"] },
+    
     { groupLabel: "Hỗ trợ", items: ["Phản hồi của tôi"] },
   ],
   Enterprise: [
@@ -28,8 +28,8 @@ const menuGroups = {
     },
   ],
   Collector: [
-    { groupLabel: "Công việc", items: ["Nhiệm vụ thu gom", "Bản đồ nhiệm vụ"] },
-    { groupLabel: "Cá nhân", items: ["Thống kê cá nhân"] },
+    { groupLabel: "Công việc", items: ["Nhiệm vụ thu gom"] },
+  
   ],
 };
 
